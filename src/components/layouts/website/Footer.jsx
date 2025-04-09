@@ -57,7 +57,7 @@ const Footer = () => {
         </article>
       </section>
       <section className="text-center py-7 border border-t-[#8E8E8E]">
-        <p>© 2024 <b>Klinik Putri Wamena</b>.All rights reserved.</p>
+        <p>© 2025 <b>Klinik Putri Wamena</b>.All rights reserved.</p>
       </section>
     </footer>
   )
