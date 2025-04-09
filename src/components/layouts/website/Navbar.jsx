@@ -4,7 +4,7 @@ import { useState } from "react";
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import Icon from "@/components/ui/Icon";
 import useSignOut from 'react-auth-kit/hooks/useSignOut';
-import Logo from "@/assets/logo/klinik-putri-wamena.png";
+import Logo from "@/assets/logo/klinik-putri.png";
 
 const Navbar = () => {
   const auth = useAuthUser();
