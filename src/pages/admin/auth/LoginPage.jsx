@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Toaster } from "react-hot-toast";
 import z from "zod";
+import logo from "../../../assets/logo/klinik-putri.png";
 
 const loginFormSchema = z.object({
   username: z
@@ -35,7 +36,7 @@ const LoginPage = () => {
     <main className="grid min-h-screen grid-cols-1 bg-gray-100 md:grid-cols-3">
       <Toaster />
       <section className="flex justify-center items-center bg-[#159030]/20 col-span-1 md:col-span-2 p-6">
-        <img src="/src/assets/logo/klinik-putri.png" className="h-auto max-w-full" alt="logo klinik"/>
+        <img src= {logo} className="h-auto max-w-full" alt="logo klinik"/>
       </section>
       <section className="flex items-center justify-center p-6 sm:p-10 md:p-14">
         <div className="w-full max-w-md">
