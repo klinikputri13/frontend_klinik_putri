@@ -4,6 +4,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import useSignOut from 'react-auth-kit/hooks/useSignOut';
 import { Link, useNavigate } from 'react-router-dom'
+import logo from "../../../assets/logo/klinik-putri.png"
 
 const Navbar = () => {
   const auth = useAuthUser();
@@ -18,7 +19,7 @@ const Navbar = () => {
   return (
     <nav className='fixed top-0 z-50 flex justify-between w-full px-12 bg-white shadow-md py-7'>
       <figure>
-        <img src="/src/assets/logo/klinik-putri.png" className='' alt="logo klinik putri" width={70} />
+        <img src= {logo} className='' alt="logo klinik putri" width={70} />
       </figure>
       <Menu>
         <MenuButton>
