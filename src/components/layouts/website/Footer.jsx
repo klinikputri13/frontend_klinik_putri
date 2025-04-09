@@ -1,6 +1,6 @@
 import Icon from "@/components/ui/Icon"
 import useFooterQueries from "@/hooks/admin/footer/useFooterQueries"
-import Logo from "@/assets/logo/klinik-putri.png";
+import Logo from "@/assets/logo/klinik-putri-wamena.png";
 
 const Footer = () => {
   const { getById } = useFooterQueries()
