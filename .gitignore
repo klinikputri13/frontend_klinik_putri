@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Abaikan folder node_modules
+node_modules/
+
+# Abaikan file environment
+.env
+.env.local
