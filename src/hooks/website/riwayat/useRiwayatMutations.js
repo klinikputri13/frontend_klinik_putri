@@ -10,16 +10,17 @@ const useRiwayatMutations = (id) => {
     onSuccess: () => {
       toast.success(`Batalkan reservasi berhasil!`, {
         duration: 4000,
-        position: 'top-center',
+        position: "top-center",
         style: {
-          borderRadius: '10px',
-          background: '#333',
-          color: '#fff',
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
         },
       });
       queryClient.invalidateQueries(["riwayat"]);
     },
   });
+
   const getAntrian = useMutation({
     mutationFn: (id) => PublicRiwayatRepository.getAntrian(id),
     onSuccess: (data) => {
@@ -30,10 +31,32 @@ const useRiwayatMutations = (id) => {
     },
   });
 
+  // ✅ Tambahkan mutation deleteRiwayat
+  const deleteRiwayat = useMutation({
+    mutationFn: (id) => PublicRiwayatRepository.deleteRiwayat(id),
+    onSuccess: () => {
+      toast.success("Riwayat berhasil dihapus", {
+        duration: 4000,
+        position: "top-center",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      queryClient.invalidateQueries(["riwayat"]);
+    },
+    onError: (error) => {
+      toast.error("Gagal menghapus riwayat");
+      console.error("Delete error:", error);
+    },
+  });
+
   return {
     cancelReservasi,
     getAntrian,
+    deleteRiwayat, // <-- pastikan ini direturn
   };
-}
+};
 
-export default useRiwayatMutations
+export default useRiwayatMutations;

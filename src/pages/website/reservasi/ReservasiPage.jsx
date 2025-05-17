@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import useSpesialisasiQueries from "@/hooks/website/spesialisasi/useSpesialisasiQueries";
-import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
 import useReservasiMutations from "@/hooks/website/reservasi/useReservasiMutations";
+import { useForm } from "react-hook-form";
 import CustomAlert from "@/components/ui/CustomAlert";
 
 const weekdays = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
@@ -29,6 +29,7 @@ const formatDays = (hariArray) => {
 
 const ReservasiPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { spesialisasiByIdQuery } = useSpesialisasiQueries({ id: id });
   const { reservasi } = useReservasiMutations();
   const [selectedDate, setSelectedDate] = useState("");
@@ -82,10 +83,12 @@ const ReservasiPage = () => {
       nama: "",
       umur: "",
       no_hp: "",
+      alamat: "",
+      jenis_kelamin: "",
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     data.id = id;
     setPendingFormData(data);
     setShowUpdateAlert(true);
@@ -96,16 +99,15 @@ const ReservasiPage = () => {
       const payload = {
         ...pendingFormData,
         appointmentDate: selectedDate,
-        appointmentTime: selectedTime
+        appointmentTime: selectedTime,
       };
       reservasi.mutate(payload, {
         onSuccess: () => {
           setShowUpdateAlert(false);
           setPendingFormData(null);
-        }
+          navigate("/user/riwayat");
+        },
       });
-      setShowUpdateAlert(false);
-      setPendingFormData(null);
     } catch (error) {
       console.error("Form submission error:", error);
     }
@@ -170,8 +172,8 @@ const ReservasiPage = () => {
             </div>
             <div className="flex flex-col space-y-4">
               <label htmlFor="jenis_kelamin" className="text-xl font-medium text-primary">Jenis Kelamin</label>
-              <select id="jenis_kelamin" {...register("jenis_kelamin")} className="px-4 py-3 border border-gray-400 rounded-lg">
-                <option disabled selected>Pilih Jenis Kelamin</option>
+              <select id="jenis_kelamin" {...register("jenis_kelamin")} className="px-4 py-3 border border-gray-400 rounded-lg" defaultValue="">
+                <option disabled value="">Pilih Jenis Kelamin</option>
                 <option value="laki-laki">Laki-laki</option>
                 <option value="perempuan">Perempuan</option>
               </select>
@@ -182,7 +184,13 @@ const ReservasiPage = () => {
                 <p>{dataSpesialisasi ? formatDays(dataSpesialisasi.hari) : ""}</p>
                 <p>{dataSpesialisasi ? `${dataSpesialisasi.jam_mulai} - ${dataSpesialisasi.jam_selesai}` : ""}</p>
               </div>
-              <button type="submit" className="w-full py-2 font-medium text-white rounded-lg bg-primary">Buat Reservasi</button>
+              <button
+                type="submit"
+                disabled={!selectedDate || !selectedTime}
+                className={`w-full py-2 font-medium text-white rounded-lg ${(!selectedDate || !selectedTime) ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}`}
+              >
+                Buat Reservasi
+              </button>
             </div>
           </article>
         </div>

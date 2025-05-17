@@ -11,7 +11,7 @@ const useReservasiMutations = () => {
   const reservasi = useMutation({
     mutationFn: (data) => PublicReservasiRepository.reservasi(data),
     onSuccess: () => {
-      toast.success(`reservasi berhasil!`, {
+      toast.success(`reservasi kamu berhasil di buat!`, {
         duration: 4000,
         position: 'top-center',
         style: {
