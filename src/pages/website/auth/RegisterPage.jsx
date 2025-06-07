@@ -1,8 +1,7 @@
 import { useAuthMutations } from "@/hooks/auth/useAuthMutations";
-import { AuthRepository } from "@/repositories";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import z from "zod";
 
 const registerFormSchema = z.object({
@@ -25,6 +24,8 @@ const registerFormSchema = z.object({
 
 const RegisterPage = () => {
   const { registerUser } = useAuthMutations();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -35,10 +36,12 @@ const RegisterPage = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = registerUser.mutate(data);
-      return response;
+      const response = await registerUser.mutateAsync(data);
+      if (response) {
+        navigate("/user/login");
+      }
     } catch (error) {
-      console.error('Registrasi gagal:', error);
+      console.error("Registrasi gagal:", error);
     }
   };
 
@@ -52,6 +55,7 @@ const RegisterPage = () => {
         <header className="text-center">
           <h1 className="text-2xl font-bold md:text-4xl text-primary">registrasi</h1>
         </header>
+
         <div className="flex flex-col gap-2">
           <label htmlFor="name" className="text-lg font-medium md:text-xl text-primary">
             nama
@@ -68,6 +72,7 @@ const RegisterPage = () => {
             <small className="text-sm text-red-500">{errors.name.message}</small>
           )}
         </div>
+
         <div className="flex flex-col gap-2">
           <label htmlFor="username" className="text-lg font-medium md:text-xl text-primary">
             username
@@ -84,6 +89,7 @@ const RegisterPage = () => {
             <small className="text-sm text-red-500">{errors.username.message}</small>
           )}
         </div>
+
         <div className="flex flex-col gap-2">
           <label htmlFor="password" className="text-lg font-medium md:text-xl text-primary">
             kata sandi
@@ -100,6 +106,7 @@ const RegisterPage = () => {
             <small className="text-sm text-red-500">{errors.password.message}</small>
           )}
         </div>
+
         <button
           type="submit"
           className="w-full px-6 py-2 text-lg md:text-xl font-medium text-white bg-primary rounded-xl disabled:bg-[#dbfde2] disabled:text-[#47e167] capitalize"
@@ -107,12 +114,14 @@ const RegisterPage = () => {
         >
           registrasi
         </button>
+
         <p className="text-[#8E8E8E] text-base md:text-xl text-center lowercase first-letter:capitalize">
           sudah punya akun?{" "}
           <Link to="/user/login" className="font-medium capitalize text-primary">
             masuk
           </Link>
         </p>
+
         <Link
           to="/admin/login"
           className="text-base font-medium text-center lowercase md:text-xl text-primary first-letter:capitalize"
