@@ -17,7 +17,28 @@ const ReservasiList = ({ data, pagination, setPagination, searchQuery, setSearch
   const [deleteId, setDeleteId] = useState(null);
   const { remove } = useReservasiMutations();
 
-  // Definisikan kolom untuk react-table
+  // Fungsi untuk generate nomor antrian berdasarkan spesialisasi dan tanggal
+  const generateAntrianBySpesialisasi = (reservasiData) => {
+    const grouped = {};
+
+    reservasiData?.data?.forEach((item) => {
+      const key = `${item.spesialisasiId}-${item.appointmentDate}`;
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(item);
+    });
+
+    Object.values(grouped).forEach((group) => {
+      group.sort((a, b) => new Date(a.appointmentTime) - new Date(b.appointmentTime));
+      group.forEach((item, index) => {
+        item.nomorAntrian = index + 1;
+      });
+    });
+
+    return reservasiData;
+  };
+
+  const processedData = generateAntrianBySpesialisasi(data);
+
   const columns = useMemo(() => [
     {
       accessorKey: 'id',
@@ -45,6 +66,10 @@ const ReservasiList = ({ data, pagination, setPagination, searchQuery, setSearch
       header: 'status',
     },
     {
+      accessorKey: 'nomorAntrian',
+      header: 'Nomor Antrian',
+    },
+    {
       accessorKey: 'aksi',
       header: 'aksi',
       cell: ({ row }) => (
@@ -68,7 +93,7 @@ const ReservasiList = ({ data, pagination, setPagination, searchQuery, setSearch
   ], []);
 
   const table = useReactTable({
-    data: data?.data || [],
+    data: processedData?.data || [],
     columns,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
@@ -78,13 +103,12 @@ const ReservasiList = ({ data, pagination, setPagination, searchQuery, setSearch
     onPaginationChange: setPagination,
     onGlobalFilterChange: setSearchQuery,
     manualPagination: true,
-    pageCount: data?.totalPages || 1,
+    pageCount: processedData?.totalPages || 1,
     state: {
       pagination,
     },
   });
 
-  // Fungsi untuk handle klik tombol hapus
   const handleDeleteClick = (id) => {
     setDeleteId(id);
     setShowDeleteAlert(true);
@@ -92,7 +116,6 @@ const ReservasiList = ({ data, pagination, setPagination, searchQuery, setSearch
 
   return (
     <>
-      {/* Kontrol pagination dan pencarian */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 py-2">
           <p className="font-medium">Show</p>
@@ -118,7 +141,6 @@ const ReservasiList = ({ data, pagination, setPagination, searchQuery, setSearch
         />
       </div>
 
-      {/* Tabel data */}
       <table className="w-full border-collapse border border-gray-300 text-center">
         <thead className="bg-gray-100 h-10">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -148,7 +170,6 @@ const ReservasiList = ({ data, pagination, setPagination, searchQuery, setSearch
         </tbody>
       </table>
 
-      {/* Pagination info dan tombol navigasi */}
       <div className="flex items-center justify-between mt-4">
         <p>
           Showing{' '}
@@ -197,7 +218,6 @@ const ReservasiList = ({ data, pagination, setPagination, searchQuery, setSearch
         </div>
       </div>
 
-      {/* Konfirmasi hapus data */}
       {showDeleteAlert && (
         <CustomAlert
           title="Hapus Data?"
